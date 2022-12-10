@@ -1,0 +1,93 @@
+# __BEGIN_LICENSE__
+# Copyright (C) 2008-2010 United States Government as represented by
+# the Administrator of the National Aeronautics and Space Administration.
+# All Rights Reserved.
+# __END_LICENSE__
+
+# Configuration file when hosting geocamMapFasten on Google App Engine.
+
+# Replace application name with your application.
+application: mapfasten
+
+version: mydev
+runtime: python27
+api_version: 1
+threadsafe: no
+
+libraries:
+
+- name: django
+  version: "1.3"
+
+- name: PIL
+  version: "latest"
+
+- name: numpy
+  version: "latest"
+
+handlers:
+
+- url: /favicon.ico
+  static_files: build/static/mapFasten/icons/mapFastenFavicon.ico
+  upload: build/static/mapFasten/icons/mapFastenFavicon.ico
+
+- url: /static
+  static_dir: build/static
+
+# no auth required on front page
+- url: /
+  script: submodules/geocamAppEngineLibs/main.py
+
+- url: /admin/.*
+  script: submodules/geocamAppEngineLibs/main.py
+  login: admin
+
+# backend instances do not respond to 'login: required' urls
+# but do respond to 'login: admin' urls.
+
+- url: /backend/.*
+  script: submodules/geocamAppEngineLibs/main.py
+  login: admin
+
+# don't require login for any urls under /public
+
+- url: /public/.*
+  script: submodules/geocamAppEngineLibs/main.py
+
+- url: /.*
+  script: submodules/geocamAppEngineLibs/main.py
+  login: required
+
+env_variables:
+  DJANGO_SETTINGS_MODULE: 'settings'
+  DJANGO_SCRIPT_NAME: '/'
+
+# deployment is faster if we skip more files.
+# https://developers.google.com/appengine/docs/python/config/appconfig#Skipping%5FFiles
+
+skip_files:
+- ^(.*/)?app\.yaml$
+- ^(.*/)?app\.yml$
+- ^(.*/)?index\.yaml$
+- ^(.*/)?index\.yml$
+- ^(.*/)?#.*#$
+- ^(.*/)?.*~$
+- ^(.*/)?.*\.py[co]$
+- ^(.*/)?.*/RCS/.*$
+- ^(.*/)?\..*$
+- ^dev.db$
+- ^data/
+- ^build/management/
+- ^build/bin/
+- /doc_src/
+- ^apps/georefApp/static
+- ^submodules/geocamAppEngineLibs/staticfiles/tests
+- ^submodules/geocamAppEngineLibs/appconf/tests
+- ^submodules/geocamAppEngineLibs/tagging/tests
+- ^submodules/geocamAppEngineLibs/django_digest/test
+- ^submodules/geocamAppEngineLibs/pysqlite2/test
+- ^submodules/geocamTiePoint
+- ^submodules/geocamUtilWeb
+- .*geocamTiePoint/export.*
+- .*t?gz$
+- .*build/static/geocamTiePoint/overlay_images/.*

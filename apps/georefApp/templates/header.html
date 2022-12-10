@@ -1,0 +1,19 @@
+<!doctype html>
+<div id="navbar" class="navbar">
+  <div class="navbar-inner">
+    <ul id="navlist" class="nav">
+      <li><a href="/"><img src="{{ STATIC_URL }}georef/icons/GeoRefNoBox.png"/></a></li>
+      <li class="nav_pad_vertical navbar-text"><a href="{% url 'georef_home' %}">Overview</a></li>
+      <li class="nav_pad_vertical navbar-text"><a href="{% url 'geocamTiePoint_backbone' %}#overlays/">List Overlays</a></li>
+    </ul>
+    <p class="pull-right navbar-text" style="float:right">
+  {% if user.is_authenticated %}
+    <a href="{{ logout_url }}"
+       title="Logout">Logout</a>
+  {% else %} <!-- user.is_authenticated -->
+    <a href="{{ login_url_with_next }}"
+       title="Login">Login</a>
+  {% endif %} <!-- user.is_authenticated (else) -->
+    </p>
+  </div>
+</div>
